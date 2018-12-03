@@ -1,0 +1,113 @@
+def create_train_data(train_img_path, train_label_path, train_img_npy_path, train_label_npy_path, img_size):
+    ### Image ###
+    i = 0
+    imgs = glob.glob(train_img_path + "/*." + 'jpg')
+    imgdatas = np.ndarray((len(imgs), img_size, img_size,1), dtype=np.uint8)
+
+    for imgname in imgs:
+#         img = load_img(imgname, grayscale = True)
+        img = cv2.imread(imgname, 0)
+        ## resize
+        reimg = cv2.resize(img, (img_size, img_size), interpolation=cv2.INTER_CUBIC)
+        img = img_to_array(reimg)
+        imgdatas[i] = img
+
+        if i % 100 == 0:
+            print('Done: {0}/{1} images'.format(i+1, len(imgs)))
+        i += 1
+        
+    np.save(train_img_npy_path + 'image_train.npy', imgdatas)
+    print('Saving to image .npy files done.\n')   
+    
+    ### label ###
+    i = 0
+    labels = glob.glob(train_label_path + "/*." + 'png')
+    labeldates = np.ndarray((len(labels),img_size, img_size,1), dtype=np.uint8)
+    
+    for labelname in labels:
+#         label = load_img(labelname, grayscale = True)
+        label = cv2.imread(labelname, 0)
+        ## resize
+        relabel = cv2.resize(label, (img_size, img_size), interpolation=cv2.INTER_CUBIC)
+        label = img_to_array(relabel)
+        labeldates[i] = label
+        
+        if i % 100 == 0:
+            print('Done: {0}/{1} labels'.format(i+1, len(labels)))
+        i += 1
+        
+    np.save(train_label_npy_path + 'label_train.npy', labeldates)
+    print('Saving to label .npy files done.\n')
+
+    
+# def create_test_data(test_img_path, test_label_path, test_img_npy_path, test_label_npy_path, img_size):
+#     ### Image ###
+#     i = 0
+#     imgs = glob.glob(test_img_path + "/*." + 'jpg')
+    
+#     ### sorting ###
+#     filenames_img = []
+#     for k in range(len(imgs)):
+#         filename = test_img_path +"/"+ str(k+1).zfill(5) + "." + 'jpg'
+#         filenames_img.append(filename)
+#         imgs = filenames_img
+        
+#     imgdatas = np.ndarray((len(imgs), img_size, img_size,1), dtype=np.uint8)
+#     for imgname in imgs:
+#         #img = load_img(imgname, grayscale = True)
+#         img = cv2.imread(imgname, 0)
+#         reimg = cv2.resize(img, (img_size, img_size), interpolation=cv2.INTER_CUBIC)
+#         img = img_to_array(reimg)
+#         imgdatas[i] = img
+
+#         if i % 100 == 0:
+#             print('Done: {0}/{1} images'.format(i+1, len(imgs)))
+#         i += 1
+        
+#     np.save(test_img_npy_path + 'image_test.npy', imgdatas)
+#     print('Saving to image .npy files done.\n')   
+    
+#     ### label ###
+#     i = 0
+#     labels = glob.glob(test_label_path + "/*." + 'jpg')
+    
+#     ### sorting ###
+#     filenames_label = []
+#     for k in range(len(labels)):
+#         filename = test_label_path +"/"+ str(k+1).zfill(5) + "." + 'jpg'
+#         filenames_label.append(filename)
+#         labels = filenames_label
+        
+#     labeldates = np.ndarray((len(labels),img_size, img_size,1), dtype=np.uint8)
+#     for labelname in labels:
+#         #label = load_img(labelname, grayscale = True)
+#         label = cv2.imread(labelname, 0)
+#         relabel = cv2.resize(label, (img_size, img_size), interpolation=cv2.INTER_CUBIC)
+#         label = img_to_array(relabel)
+#         labeldates[i] = label
+        
+#         if i % 100 == 0:
+#             print('Done: {0}/{1} labels'.format(i+1, len(labels)))
+#         i += 1
+        
+#     np.save(test_label_npy_path + 'label_test.npy', labeldates)
+#     print('Saving to label .npy files done.')
+
+create_train_data(train_img_path, train_label_path, train_img_npy_path, train_label_npy_path, img_size)
+# create_test_data(test_img_path, test_label_path, test_img_npy_path, test_label_npy_path, img_size)
+
+""" Train """
+## Image
+image_train = np.load(train_img_npy_path + "image_train.npy")
+image_train = image_train.astype('float32')
+image_train /= 255
+
+## Label
+label_train = np.load(train_label_npy_path+"/label_train.npy")
+label_train = label_train.astype('float32')
+label_train /= 255
+label_train[label_train > 0.5] = 1
+label_train[label_train <= 0.5] = 0
+
+    
+print("*** Load Train Dataset Complete")
