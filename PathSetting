@@ -1,0 +1,31 @@
+train = 'data1'
+test = 'data2'
+
+train_img_path = '../Dataset/' + train + '/image/' + spine_type + '_jpg/'
+train_label_path = '../Dataset/' + train + '/label/' + spine_type + '_label/'
+train_img_npy_path = '../Dataset/' + train + '/image/' + spine_type + '_npy/'
+train_label_npy_path = '../Dataset/' + train + '/label/' + spine_type + '_npy/'
+
+# test_img_path = '../Dataset/' + test + '/image/' + spine_type + '_png/'
+# test_label_path = '../Dataset/' + test + '/label/' + spine_type + '_png/'
+# test_img_npy_path = '../Dataset/' + test + '/image/' + spine_type + '_npy/'
+# test_label_npy_path = '../Dataset/' + test + '/label/' + spine_type + '_npy/'
+
+
+
+save_path = './Result/' + spine_type + '/saved_model/'
+if not os.path.isdir(save_path):
+    os.makedirs(save_path)    
+model_path = os.path.join(save_path, model_name)
+
+tf_graph_path = './Result/' + spine_type + '/tf_graph/'    
+if not os.path.isdir(tf_graph_path):
+    os.makedirs(tf_graph_path)   
+    
+graph_path = './Result/' + spine_type+ '/graph_log/'    
+if not os.path.isdir(graph_path):
+    os.makedirs(graph_path)   
+
+unet_result_path = './Result/' +spine_type + '/unet_result/' 
+if not os.path.isdir(unet_result_path):
+    os.makedirs(unet_result_path)   
